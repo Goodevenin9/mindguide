@@ -9,6 +9,9 @@ import plotly.express as px
 from datetime import datetime
 import random
 import re
+import json
+import urllib.request
+import urllib.error
 
 st.set_page_config(page_title="🧠 心理老师 MindGuide", layout="wide", page_icon="🧠")
 
@@ -46,6 +49,7 @@ if "init" not in st.session_state:
     st.session_state.soul_analysis = ""
     st.session_state.chat_count = 0
     st.session_state.welcome_shown = False
+    st.session_state.api_key = ""
 
 # ── 心理学流派风格定义 ──
 SCHOOLS = {
@@ -166,8 +170,15 @@ def analyze_soul(user_input):
         "L - 学习成长": f"适合引入{'情绪认知' if s_emotion!='积极' else '优势识别'}相关知识点"
     }
 
-def generate_response(user_input, school_name):
+def generate_response(user_input, school_name, api_key=None):
     """根据用户输入和选择的流派生成回复"""
+    # 如果有API Key，优先调用大模型
+    if api_key:
+        reply = call_qianwen(user_input, school_name, api_key)
+        if reply:
+            return reply
+
+    # 以下为模板兜底（无API Key时的备用方案）
     # 尝试直接匹配主题词
     for topic, responses in RESPONSE_TEMPLATES.items():
         if topic in user_input:
@@ -188,6 +199,53 @@ def generate_response(user_input, school_name):
     # 兜底回复（随机选择）
     fallbacks = FALLBACK_RESPONSES.get(school_name, FALLBACK_RESPONSES["人本主义"])
     return random.choice(fallbacks)
+
+def call_qianwen(prompt, school_name, api_key):
+    """调用通义千问 API 生成回复"""
+    school_info = SCHOOLS.get(school_name, SCHOOLS["人本主义"])
+    system_prompt = f"""你是 MindGuide，一位专业且有温度的心理老师。
+你当前采用「{school_name}」心理学流派，风格：{school_info['style']}。
+核心方法：{'、'.join(school_info['tags'])}。
+{school_info['desc']}
+
+回答要求：
+1. 始终以该流派的视角回应
+2. 语言温暖自然，使用中文
+3. 如果用户提到情绪困扰，先共情再引导
+4. 适当给出心理学小知识或练习
+5. 不要输出太长，2-4句话即可
+6. 不要使用markdown格式，用纯文字+emoji"""
+
+    data = json.dumps({
+        "model": "qwen-turbo",
+        "input": {
+            "messages": [
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": prompt}
+            ]
+        },
+        "parameters": {
+            "temperature": 0.8,
+            "max_tokens": 500,
+            "result_format": "message"
+        }
+    }).encode("utf-8")
+
+    req = urllib.request.Request(
+        "https://dashscope.aliyuncs.com/api/v1/services/aigc/text-generation/generation",
+        data=data,
+        headers={
+            "Authorization": f"Bearer {api_key}",
+            "Content-Type": "application/json"
+        },
+        method="POST"
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=30) as resp:
+            result = json.loads(resp.read())
+            return result["output"]["choices"][0]["message"]["content"]
+    except Exception as e:
+        return None
 
 def record_emotion(user_input):
     """简单情绪记录"""
@@ -242,6 +300,15 @@ with st.sidebar:
     </div>
     """, unsafe_allow_html=True)
 
+    st.divider()
+    st.markdown("### 🔗 AI 增强")
+    st.text_input("通义千问 API Key（可选）", type="password", key="api_key",
+                           placeholder="留空=使用预设模板",
+                           help="开通免费版：dashscope.aliyun.com → 模型广场 → qwen-turbo → 免费额度每月100万token")
+    if st.session_state.api_key:
+        st.caption("✅ AI模式已启用")
+    else:
+        st.caption("留空则使用心理学模板")
     st.divider()
     st.markdown("### 📊 今日概况")
     if st.session_state.emotion_log:
@@ -322,7 +389,7 @@ with tab1:
 
         # 生成回复
         school_name = st.session_state.school
-        response = generate_response(user_input, school_name)
+        response = generate_response(user_input, school_name, st.session_state.get("api_key", ""))
 
         # 提取知识点
         for topic in RESPONSE_TEMPLATES.keys():
