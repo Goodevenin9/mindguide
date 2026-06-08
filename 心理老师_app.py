@@ -174,7 +174,7 @@ def generate_response(user_input, school_name, api_key=None):
     """根据用户输入和选择的流派生成回复"""
     # 如果有API Key，优先调用大模型
     if api_key:
-        reply = call_qianwen(user_input, school_name, api_key)
+        reply = call_llm(user_input, school_name, api_key)
         if reply:
             return reply
 
@@ -200,7 +200,7 @@ def generate_response(user_input, school_name, api_key=None):
     fallbacks = FALLBACK_RESPONSES.get(school_name, FALLBACK_RESPONSES["人本主义"])
     return random.choice(fallbacks)
 
-def call_qianwen(prompt, school_name, api_key):
+def call_llm(prompt, school_name, api_key):
     """调用通义千问 API 生成回复"""
     school_info = SCHOOLS.get(school_name, SCHOOLS["人本主义"])
     system_prompt = f"""你是 MindGuide，一位专业且有温度的心理老师。
@@ -217,22 +217,17 @@ def call_qianwen(prompt, school_name, api_key):
 6. 不要使用markdown格式，用纯文字+emoji"""
 
     data = json.dumps({
-        "model": "qwen-turbo",
-        "input": {
-            "messages": [
-                {"role": "system", "content": system_prompt},
-                {"role": "user", "content": prompt}
-            ]
-        },
-        "parameters": {
-            "temperature": 0.8,
-            "max_tokens": 500,
-            "result_format": "message"
-        }
+        "model": "deepseek-chat",
+        "messages": [
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": prompt}
+        ],
+        "temperature": 0.8,
+        "max_tokens": 500
     }).encode("utf-8")
 
     req = urllib.request.Request(
-        "https://dashscope.aliyuncs.com/api/v1/services/aigc/text-generation/generation",
+        "https://api.deepseek.com/v1/chat/completions",
         data=data,
         headers={
             "Authorization": f"Bearer {api_key}",
@@ -243,7 +238,7 @@ def call_qianwen(prompt, school_name, api_key):
     try:
         with urllib.request.urlopen(req, timeout=30) as resp:
             result = json.loads(resp.read())
-            return result["output"]["choices"][0]["message"]["content"]
+            return result["choices"][0]["message"]["content"]
     except Exception as e:
         return None
 
@@ -302,9 +297,9 @@ with st.sidebar:
 
     st.divider()
     st.markdown("### 🔗 AI 增强")
-    st.text_input("通义千问 API Key（可选）", type="password", key="api_key",
-                           placeholder="留空=使用预设模板",
-                           help="开通免费版：dashscope.aliyun.com → 模型广场 → qwen-turbo → 免费额度每月100万token")
+    st.text_input("DeepSeek API Key", type="password", key="api_key",
+                           placeholder="填入即启用AI模式",
+                           help="填入你的DeepSeek API Key后，回复将由AI实时生成")
     if st.session_state.api_key:
         st.caption("✅ AI模式已启用")
     else:
