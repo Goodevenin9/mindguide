@@ -217,7 +217,7 @@ def call_llm(prompt, school_name, api_key):
 6. 不要使用markdown格式，用纯文字+emoji"""
 
     data = json.dumps({
-        "model": "deepseek-chat",
+        "model": "deepseek-v4-flash",
         "messages": [
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": prompt}
