@@ -170,11 +170,11 @@ def analyze_soul(user_input):
         "L - 学习成长": f"适合引入{'情绪认知' if s_emotion!='积极' else '优势识别'}相关知识点"
     }
 
-def generate_response(user_input, school_name, api_key=None):
+def generate_response(user_input, school_name, api_key=None, mode="💬 自由倾诉"):
     """根据用户输入和选择的流派生成回复"""
     # 如果有API Key，优先调用大模型
     if api_key:
-        reply = call_llm(user_input, school_name, api_key)
+        reply = call_llm(user_input, school_name, api_key, mode)
         if reply:
             return reply
 
@@ -200,21 +200,32 @@ def generate_response(user_input, school_name, api_key=None):
     fallbacks = FALLBACK_RESPONSES.get(school_name, FALLBACK_RESPONSES["人本主义"])
     return random.choice(fallbacks)
 
-def call_llm(prompt, school_name, api_key):
-    """调用通义千问 API 生成回复"""
+def call_llm(prompt, school_name, api_key, mode="💬 自由倾诉"):
+    """调用 DeepSeek API 生成回复"""
     school_info = SCHOOLS.get(school_name, SCHOOLS["人本主义"])
-    system_prompt = f"""你是 MindGuide，一位专业且有温度的心理老师。
-你当前采用「{school_name}」心理学流派，风格：{school_info['style']}。
-核心方法：{'、'.join(school_info['tags'])}。
-{school_info['desc']}
 
-回答要求：
-1. 始终以该流派的视角回应
-2. 语言温暖自然，使用中文
-3. 如果用户提到情绪困扰，先共情再引导
-4. 适当给出心理学小知识或练习
-5. 不要输出太长，2-4句话即可
-6. 不要使用markdown格式，用纯文字+emoji"""
+    if "课堂" in mode:
+        role_desc = "你是一位心理学科普讲师，用通俗易懂的方式传授心理学知识"
+        style_extra = """回答要求：
+1. 每次回复开头先说"同学，"
+2. 先用一句话回应用户，再引出心理学知识点
+3. 结合实际案例或生活场景讲解
+4. 适当给出可以实操的小练习
+5. 控制在4-6句话"""
+    else:
+        role_desc = "你是一位温暖的心理陪伴者"
+        style_extra = """回答要求：
+1. 每次回复开头先说"同学，"
+2. 先共情，让用户感到被理解
+3. 用温和的语气引导用户表达更多
+4. 可以适当给出情绪调节小技巧
+5. 控制在3-5句话"""
+
+    system_prompt = f"""{role_desc}，当前采用「{school_name}」流派。
+风格：{school_info['style']}。{school_info['desc']}
+
+{style_extra}
+使用纯文字+emoji，不用markdown格式。"""
 
     data = json.dumps({
         "model": "deepseek-chat",
@@ -384,7 +395,7 @@ with tab1:
 
         # 生成回复
         school_name = st.session_state.school
-        response = generate_response(user_input, school_name, st.session_state.get("api_key", ""))
+        response = generate_response(user_input, school_name, st.session_state.get("api_key", ""), st.session_state.mode)
 
         # 提取知识点
         for topic in RESPONSE_TEMPLATES.keys():
