@@ -47,7 +47,8 @@
       "Bash(curl -s -o /dev/null -w 'cse.sysu.edu.cn/teacher/: %{http_code}\\\\n' -H 'User-Agent: Mozilla/5.0 \\(Windows NT 10.0; Win64; x64\\) AppleWebKit/537.36' https://cse.sysu.edu.cn/teacher/ChenGang)",
       "Bash(curl -s -o /dev/null -w 'cse.sysu.edu.cn/: %{http_code}\\\\n' -H 'User-Agent: Mozilla/5.0 \\(Windows NT 10.0; Win64; x64\\) AppleWebKit/537.36' https://cse.sysu.edu.cn/)",
       "Bash(curl -s -o /dev/null -w 'lingnan: %{http_code}\\\\n' -H 'User-Agent: Mozilla/5.0 \\(Windows NT 10.0; Win64; x64\\) AppleWebKit/537.36' https://lingnan.sysu.edu.cn/faculty/BiQingMiao)",
-      "Bash(pip list *)"
+      "Bash(pip list *)",
+      "Bash(python -c ' *)"
     ]
   }
 }
