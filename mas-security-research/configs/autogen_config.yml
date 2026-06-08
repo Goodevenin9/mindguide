@@ -1,0 +1,31 @@
+# AutoGen 配置 - 连接本地 Ollama
+# 适用于 Ubuntu VM 内运行
+
+config_list:
+  - model: "llama3"
+    base_url: "http://localhost:11434/v1"
+    api_key: "ollama"
+    api_type: "ollama"
+    tags:
+      - llama3
+      - fast
+
+  - model: "qwen2.5:7b"
+    base_url: "http://localhost:11434/v1"
+    api_key: "ollama"
+    api_type: "ollama"
+    tags:
+      - qwen2.5
+      - chinese
+
+  - model: "phi3:mini"
+    base_url: "http://localhost:11434/v1"
+    api_key: "ollama"
+    api_type: "ollama"
+    tags:
+      - phi3
+      - mini
+
+default_model: "llama3"
+temperature: 0.7
+max_tokens: 2048

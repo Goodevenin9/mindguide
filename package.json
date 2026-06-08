@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "pdfkit": "^0.18.0",
+    "pinyin": "^4.0.0",
+    "puppeteer-core": "^25.1.0",
+    "xlsx": "^0.18.5"
+  }
+}

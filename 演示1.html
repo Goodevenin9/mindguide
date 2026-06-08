@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-Agent Trust & Cross-Agent Contamination Outline</title>
+    <style>
+        * {margin: 0; padding: 0; box-sizing: border-box; font-family: "Segoe UI", Arial, sans-serif;}
+        body {background: #f5f7fa; color: #333; line-height: 1.7; padding:30px; max-width:1200px; margin:0 auto;}
+        .title-box{background:#194b9c;color:#fff;padding:20px 30px;border-radius:10px;margin-bottom:25px;}
+        h1{font-size:24px;}
+        .total-info{color:#e0e9ff;margin-top:8px}
+        .chapter{background:#fff;border-radius:8px;padding:22px 28px;margin-bottom:20px;box-shadow:0 2px 12px #e1e7f2;}
+        .chapter h2{color:#194b9c;border-left:5px solid #194b9c;padding-left:12px;margin-bottom:15px;font-size:20px;}
+        .sub-item{margin:14px 0 14px 18px}
+        .sub-item h3{font-size:16px;color:#222;margin-bottom:6px}
+        .explain{color:#555;font-size:15px;padding-left:10px;border-left:3px solid #99b8e6;}
+        .ref-footer{margin-top:30px;padding:18px;background:#e9f0fb;border-radius:8px;color:#444;font-size:14px}
+    </style>
+</head>
+<body>
+    <div class="title-box">
+        <h1>Multi-Agent Trust Propagation and Cross-Agent Contamination: Research on BadChain and Prompt Infection Spreading in MAS</h1>
+        <div class="total-info">For classroom teaching | Formatted per IEEE conference standard</div>
+    </div>
+
+    <!-- Chapter 1 Introduction -->
+    <div class="chapter">
+        <h2>Ⅰ. Introduction</h2>
+        <div class="sub-item">
+            <h3>1. Research Background: Large Language Model Agents Widely Used in MAS</h3>
+            <div class="explain>LLM-powered agents are commonly deployed in intelligent scheduling, automatic decision-making and customer service systems based on multi-agent frameworks.</div>
+        </div>
+        <div class="sub-item">
+            <h3>2. Existing Security Risks: Cross-Agent Contamination Triggered by Upstream Attacks</h3>
+            <div class="explain>Attacks including payload injection, memory corruption and tool pollution create contamination sources, resulting in two major threats: BadChain trust destruction and prompt infection across agents.</div>
+        </div>
+        <div class="sub-item">
+            <h3>3. Limitations of Current Research</h3>
+            <div class="explain>Most existing studies focus on single-agent defense. Few papers sort upstream attack sources or compare fast and slow contamination scenarios.</div>
+        </div>
+        <div class="sub-item">
+            <h3>4. Research Purpose</h3>
+            <div class="explain>This paper sorts out contamination principles, cutting-edge attack cases and multi-layer defense solutions without practical experimental data.</div>
+        </div>
+    </div>
+
+    <!-- Chapter 2 Trust Basics -->
+    <div class="chapter">
+        <h2>Ⅱ. Basic Rules of Trust Propagation in MAS</h2>
+        <div class="sub-item">
+            <h3>A. Core Trust Transfer Rules</h3>
+            <div class="explain>Trust includes direct trust built from real cooperation and indirect recommended trust via intermediate agents. Connected trust paths naturally allow malicious contamination to spread.</div>
+        </div>
+        <div class="sub-item">
+            <h3>B. Two Main MAS Network Topologies</h3>
+            <div class="explain>Centralized topology has a core manager to limit risk spread; distributed peer-to-peer structure enables fast global contamination once partial nodes get compromised.</div>
+        </div>
+    </div>
+
+    <!-- Chapter3 Contamination Mechanism & Upstream Attacks -->
+    <div class="chapter>
+        <h2>Ⅲ. Typical Cross-Agent Contamination & Upstream Attacks: Injection, Memory and Tool Pollution</h2>
+        <div class="sub-item">
+            <h3>A. BadChain: Chain-Style Trust Contamination</h3>
+            <div class="explain>Malicious agents modify their own credit data and damage trust links step by step along recommendation paths, causing continuous invalid trust chains inside MAS.</div>
+        </div>
+        <div class="sub-item">
+            <h3>B. Prompt Infection: Text-Based Cross-Agent Pollution</h3>
+            <div class="explain>Hidden harmful commands are embedded into normal prompts and spread via data transmission, crossing different agent systems without relying on trust links.</div>
+        </div>
+        <div class="sub-item">
+            <h3>C. Three Categories of Upstream Attack Sources with Top Conference Cases</h3>
+            <div class="explain>
+1. Indirect Prompt Injection: Not what you've signed up for(AISec2023), InjecAgent(ACL2024), EIA(ICLR2025);<br>
+2. Memory Poisoning: AgentPoison(NeurIPS2024), less than 0.1% poisoned data leads to over 80% attack success rate;<br>
+3. Backdoor & Tool Attack: BadAgent(ACL2024), Watch Out for Your Agents!(NeurIPS2024);<br>
+4. Test Platform: AgentDojo(NeurIPS2024), dynamic environment to test attack spreading effects.
+            </div>
+        </div>
+    </div>
+
+    <!-- Chapter4 Spread Analysis -->
+    <div class="chapter">
+        <h2>Ⅳ. Contamination Spread Analysis: Best/Worst Case & Slow/Fast Spread Results</h2>
+        <div class="sub-item">
+            <h3>A. Different Spread Routes</h3>
+            <div class="explain>BadChain spreads over trust connections; prompt/memory/tool pollution moves through data links. Mixed networks speed up double-way risk expansion.</div>
+        </div>
+        <div class="sub-item">
+            <h3>B. Best Case: Slow & Gradual Contamination</h3>
+            <div class="explain>Regular inspection and cross-check limit pollution in small ranges, leaving enough time for system repair and node isolation.</div>
+        </div>
+        <div class="sub-item">
+            <h3>C. Worst Case: Rapid Explosive Contamination</h3>
+            <div class="explain>Pure distributed network without real-time monitoring; multiple pollution sources break out together and paralyze the whole agent cluster quickly.</div>
+        </div>
+        <div class="sub-item">
+            <h3>D. Contrast Between Slow and Fast Pollution</h3>
+            <div class="explain>Slow pollution only harms local nodes and can be fixed easily; fast pollution brings permanent system-wide damage. Random agent online/offline further speeds up risk.</div>
+        </div>
+    </div>
+
+    <!-- Chapter5 Defense Solutions -->
+    <div class="chapter">
+        <h2>Ⅴ. Multi-Layer Advanced Prevention Solutions</h2>
+        <div class="sub-item">
+            <h3>A. Pre-Deployment Evaluation Benchmarks for Early Risk Check</h3>
+            <div class="explain>R-Judge(EMNLP2024) finds hidden risks from interaction logs; ASB(ICLR2025) standard test benchmark; ToolEmu(ICLR2024) sandbox tests tool safety before formal use.</div>
+        </div>
+        <div class="sub-item">
+            <h3>B. Lightweight Runtime Real-Time Defense</h3>
+            <div class="explain>Spotlighting(2024) marks outer content to block injection; LlamaFirewall(Meta2025) open-source input filter; GuardAgent(2024) checks agent actions during runtime.</div>
+        </div>
+        <div class="sub-item">
+            <h3>C. System Isolation Architecture to Stop Cross-Agent Spread</h3>
+            <div class="explain>IsolateGPT(NDSS2025) hub-spoke independent context design; AirGapAgent(CCS2024) minimum data access control; IFC analysis limits hidden payload transfer.</div>
+        </div>
+        <div class="sub-item">
+            <h3>D. Standard Secure Development Design Patterns</h3>
+            <div class="explain>Six systematic anti-injection rules including Dual-LLM and Plan-Then-Execute to reduce native security bugs in early development.</div>
+        </div>
+    </div>
+
+    <div class="ref-footer">
+        <strong>Acknowledgement & References:</strong> All cited papers are published at top AI security conferences following standard IEEE citation format.
+    </div>
+</body>
+</html>

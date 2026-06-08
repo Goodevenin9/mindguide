@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls -la \"c:\\\\Users\\\\19546\\\\Desktop\\\\雪交\\\\\")",
+      "Read(//c/Users/19546/Desktop/**)",
+      "Bash(python3 -c \"import openpyxl; print\\('openpyxl ok'\\)\")",
+      "Bash(pip3 install *)",
+      "Bash(python3 -c \"import openpyxl; print\\('openpyxl ready'\\)\")",
+      "Bash(python3 /c/Users/19546/Desktop/雪交/read_excel.py \"中山大学计算机学院硕导数据采集表33.xlsx\")",
+      "Bash(python3 /c/Users/19546/Desktop/雪交/read_excel.py \"提取结果_计算机学院.xlsx\")",
+      "Bash(python3 /c/Users/19546/Desktop/雪交/read_excel.py \"提取失败_计算机学院.xlsx\")",
+      "Bash(powershell.exe -Command \"& {python3 -c \\\\\"import openpyxl; print\\('ok'\\)\\\\\"}\")",
+      "Bash(python3 /c/Users/19546/Desktop/雪交/analyze_excel.py)",
+      "Bash(cmd.exe /c \"python3 C:\\\\Users\\\\19546\\\\Desktop\\\\雪交\\\\analyze_excel.py\")",
+      "Bash(python3 analyze_excel.py)",
+      "Bash(python3 -c \"print\\('hello world'\\)\")",
+      "Bash(node -e \"require\\('xlsx'\\); console.log\\('xlsx ok'\\)\")",
+      "Bash(npm install *)",
+      "Bash(node read_excel.js)"
+    ]
+  }
+}
